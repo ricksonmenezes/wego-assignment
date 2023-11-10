@@ -11,7 +11,7 @@
 	<groupId>com.wego</groupId>
 	<artifactId>assignment</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>assignment</name>
 	<description>API to know availablility of car parks</description>
 	<properties>
