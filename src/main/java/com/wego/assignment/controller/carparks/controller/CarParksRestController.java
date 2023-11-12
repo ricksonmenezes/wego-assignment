@@ -80,7 +80,32 @@ public class CarParksRestController extends RestTemplate {
 
     }
 
-    //https://www.onemap.gov.sg/api/common/convert/3414to4326?X=34955.3741&Y=39587.9068
+    @RequestMapping(value = "/v1/savecarparkinfocsv", method = RequestMethod.GET)
+    public ResponseEntity<?> saveCarParkInfoCSV()
+    {
+        ResponseEntity<?> response = null;
+        HttpEntity<String> httpEntity = new HttpEntity<>(new HttpHeaders());
+
+        try {
+
+            carParkService.saveCarParkInfoCSV();
+
+            response =  new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+
+            APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unable to perform client operation error" + e.getMessage());
+
+            response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+        }
+
+        return response;
+
+    }
 
 
 }

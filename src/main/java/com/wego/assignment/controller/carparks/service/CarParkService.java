@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 public class CarParkService {
 
     @Autowired
+    CarParkInfoCSVService carParkInfoCSVService;
+
+    @Autowired
     CarparkServiceAPI carparkServiceAPI;
 
     public LatLong convertSVY21ToLatLong(double x, double y) throws CarParkException {
@@ -27,5 +30,16 @@ public class CarParkService {
 
             throw new CarParkException(e.getMessage(),e);
         }
+    }
+
+    public void saveCarParkInfoCSV()  throws CarParkException{
+
+        try {
+            carParkInfoCSVService.syncCarParkInfoFile();
+        } catch (Exception e) {
+            throw new CarParkException(e.getMessage(),e);
+
+        }
+
     }
 }
