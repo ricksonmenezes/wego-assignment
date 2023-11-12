@@ -57,7 +57,7 @@ public class QuartzConfig {
     }
 
     public static JobDetailFactoryBean createJobDetail (Class jobClass, String jobName) {
-        //HIFILogger.logDebug ("createJobDetail (jobClass = {}, jobName = {})", jobClass.getName (), jobName);
+
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean ();
         factoryBean.setName (jobName);
         factoryBean.setJobClass (jobClass);

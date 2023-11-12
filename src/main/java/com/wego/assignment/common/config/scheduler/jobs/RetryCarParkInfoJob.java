@@ -1,6 +1,6 @@
 package com.wego.assignment.common.config.scheduler.jobs;
 
-import com.wego.assignment.common.service.CarParkInfoCSVService;
+import com.wego.assignment.controller.carparks.service.CarParkInfoCSVService;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -27,11 +27,6 @@ public class RetryCarParkInfoJob implements Job {
         try {
 
             System.out.print("job came in at " + new Date());
-            //HIFILogger.logError("*********************** START OF IMS retry change events ********************************");
-
-
-
-            //HIFILogger.logError("*********************** END OF IMS exports retry change events :: " + (new Date().getTime() - startT.getTime()) + " milliseconds ******************");
 
         }
         catch(Exception e)
