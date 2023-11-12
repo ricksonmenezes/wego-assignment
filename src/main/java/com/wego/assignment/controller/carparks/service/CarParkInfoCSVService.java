@@ -1,13 +1,12 @@
 package com.wego.assignment.controller.carparks.service;
 
 import com.wego.assignment.controller.carparks.exception.CarParkInfoCSVSyncingException;
-import com.wego.assignment.controller.carparks.model.CarParkInfo;
+import com.wego.assignment.controller.carparks.model.CarPark;
 import com.wego.assignment.controller.carparks.repo.CarParkInfoRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,14 +24,17 @@ public class CarParkInfoCSVService {
 
     public void syncCarParkInfoFile() throws CarParkInfoCSVSyncingException {
 
+        InputStream is = null;
         try {
             //download file
 
             //readfile
 
+            //add some limit to the file being read into
             File file = ResourceUtils.getFile("classpath:csv/HDBCarparkInformation.csv");
-            List<CarParkInfo> carParkInfos = csvToCarParkInfo(new FileInputStream(file));
-            repository.saveAll(carParkInfos);
+            is = new FileInputStream(file);
+            List<CarPark> carParks = csvToCarParkInfo(is);
+            repository.saveAll(carParks);
 
             System.out.print("hello");
 
@@ -46,7 +48,7 @@ public class CarParkInfoCSVService {
 
     }
 
-    public List<CarParkInfo> getAllCar() {
+    public List<CarPark> getAllCar() {
         return null;
     }
 
@@ -62,29 +64,36 @@ public class CarParkInfoCSVService {
         return true;
     }
 
-    public static List<CarParkInfo> csvToCarParkInfo(InputStream is) {
+    public static List<CarPark> csvToCarParkInfo(InputStream is) throws CarParkInfoCSVSyncingException {
 
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
              CSVParser csvParser = new CSVParser(fileReader,
                      CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
 
-            List<CarParkInfo> carParkInfos = new ArrayList<CarParkInfo>();
+            List<CarPark> carParks = new ArrayList<CarPark>();
 
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for (CSVRecord csvRecord : csvRecords) {
-                CarParkInfo carParkInfo = new CarParkInfo(
+                CarPark carPark = new CarPark(
                         csvRecord.get("car_park_no"), csvRecord.get("address"), csvRecord.get("x_coord"), csvRecord.get("y_coord"), csvRecord.get("car_park_type"),
                         csvRecord.get("type_of_parking_system"), csvRecord.get("short_term_parking"), csvRecord.get("free_parking"),
                         csvRecord.get("night_parking"), csvRecord.get("car_park_decks"), csvRecord.get("gantry_height"), csvRecord.get("car_park_basement"));
 
 
-                carParkInfos.add(carParkInfo);
+                carParks.add(carPark);
             }
 
-            return carParkInfos;
+            return carParks;
         } catch (IOException e) {
-            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
+            throw new CarParkInfoCSVSyncingException("fail to parse CSV file for car parks info: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new CarParkInfoCSVSyncingException("fail to parse CSV file for car parks info: " + e.getMessage(), e);
         }
+    }
+
+    public List<CarPark> getAllCarParks() {
+
+        return  repository.findAll();
     }
 }

@@ -1,9 +1,8 @@
 package com.wego.assignment.controller.carparks.repo;
 
-import com.wego.assignment.controller.carparks.model.CarParkInfo;
+import com.wego.assignment.controller.carparks.model.CarPark;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-public interface CarParkInfoRepository extends JpaRepository<CarParkInfo, String> {
+public interface CarParkInfoRepository extends JpaRepository<CarPark, String> {
 
 }

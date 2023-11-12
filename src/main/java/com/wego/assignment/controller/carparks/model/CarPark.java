@@ -6,8 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CarParkInfo")
-public class CarParkInfo {
+@Table(name = "CarPark")
+public class CarPark {
 
     @Id
     @Column(name = "car_park_no")
@@ -44,12 +44,12 @@ public class CarParkInfo {
     private String gantry_height;
 
     @Column(name = "latitude")
-    private double latitude;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private double longitude;
+    private Double longitude;
 
-    public CarParkInfo(String car_park_no, String address, String x_coord, String y_coord, String car_park_type, String type_of_parking_system, String short_term_parking, String free_parking, String night_parking, String car_park_decks, String gantry_height, String car_park_basement) {
+    public CarPark(String car_park_no, String address, String x_coord, String y_coord, String car_park_type, String type_of_parking_system, String short_term_parking, String free_parking, String night_parking, String car_park_decks, String gantry_height, String car_park_basement) {
         this.car_park_no = car_park_no;
         this.address = address;
         this.x_coord = x_coord;
@@ -63,7 +63,7 @@ public class CarParkInfo {
         this.gantry_height = gantry_height;
         this.car_park_basement = car_park_basement;
     }
-    public CarParkInfo(){
+    public CarPark(){
 
     }
 
@@ -165,19 +165,19 @@ public class CarParkInfo {
         this.car_park_basement = car_park_basement;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
