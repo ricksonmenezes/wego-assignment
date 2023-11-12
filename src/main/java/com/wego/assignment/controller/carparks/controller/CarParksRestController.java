@@ -23,6 +23,8 @@ public class CarParksRestController extends RestTemplate {
     @Autowired
     CarParkService carParkService;
 
+
+
     @RequestMapping(value = "/v1/carparkavailability", method = RequestMethod.GET)
     public ResponseEntity<?> testController()
     {
@@ -56,6 +58,7 @@ public class CarParksRestController extends RestTemplate {
     {
         ResponseEntity<?> response = null;
         HttpEntity<String> httpEntity = new HttpEntity<>(new HttpHeaders());
+
         try {
 
             LatLong latLong = carParkService.convertSVY21ToLatLong(latitude, longitude);
