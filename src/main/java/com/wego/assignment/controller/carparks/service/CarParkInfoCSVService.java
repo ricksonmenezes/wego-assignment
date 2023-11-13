@@ -7,6 +7,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,9 +33,10 @@ public class CarParkInfoCSVService {
             //readfile
 
             //add some limit to the file being read into
-            File file = ResourceUtils.getFile("classpath:csv/HDBCarparkInformation.csv");
-            is = new FileInputStream(file);
-            List<CarPark> carParks = csvToCarParkInfo(is);
+            /*File file = ResourceUtils.getFile("classpath:csv/HDBCarparkInformation.csv");
+            is = new FileInputStream(file);*/
+            Resource resource = new ClassPathResource("csv/HDBCarparkInformation.csv");
+            List<CarPark> carParks = csvToCarParkInfo(resource.getInputStream());
             repository.saveAll(carParks);
 
             System.out.print("hello");
