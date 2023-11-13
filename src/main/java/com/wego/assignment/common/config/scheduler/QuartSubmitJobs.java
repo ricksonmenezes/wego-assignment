@@ -14,13 +14,27 @@ public class QuartSubmitJobs {
 
     @Bean("retryCarParkInfo")
     public JobDetailFactoryBean jobRetryCarParkInfo() {
-        return QuartzConfig.createJobDetail(RetryCarParkInfoJob.class, "retry change events");
+        return QuartzConfig.createJobDetail(RetryCarParkInfoJob.class, "retry car parks static data job");
     }
 
 
     @Bean (name = "retryCarParkInfoTrigger")
-    public CronTriggerFactoryBean triggerRetryChangeEvents (@Qualifier("retryCarParkInfo") JobDetail jobDetail) {
-        //return createTrigger (jobDetail, 60000, "retry change events Trigger");
-        return  QuartzConfig.createCronTrigger(jobDetail, "0 */2 * ? * *", "retry change events trigger");
+    public CronTriggerFactoryBean triggerRetryCarParkInfo (@Qualifier("retryCarParkInfo") JobDetail jobDetail) {
+
+        return  QuartzConfig.createCronTrigger(jobDetail, "0 */30 * ? * *", "retry car parks static data trigger");
+    }
+
+
+    @Bean("retryCarParkLiveData")
+    public JobDetailFactoryBean jobRetryCarParkLiveData() {
+
+        return QuartzConfig.createJobDetail(RetryCarParkInfoJob.class, "retry car park live data job");
+    }
+
+
+    @Bean (name = "retryCarParkLiveDataTrigger")
+    public CronTriggerFactoryBean triggerRetryCarParkLiveData (@Qualifier("retryCarParkLiveData") JobDetail jobDetail) {
+
+        return  QuartzConfig.createCronTrigger(jobDetail, "0 */1 * ? * *", "retry car park live data trigger");
     }
 }
