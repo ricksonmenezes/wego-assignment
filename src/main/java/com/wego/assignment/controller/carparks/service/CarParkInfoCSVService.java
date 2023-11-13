@@ -2,7 +2,7 @@ package com.wego.assignment.controller.carparks.service;
 
 import com.wego.assignment.controller.carparks.exception.CarParkInfoCSVSyncingException;
 import com.wego.assignment.controller.carparks.model.CarPark;
-import com.wego.assignment.controller.carparks.repo.CarParkInfoRepository;
+import com.wego.assignment.controller.carparks.repo.CarParkRepository;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -10,18 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CarParkInfoCSVService {
 
     @Autowired
-    CarParkInfoRepository repository;
+    CarParkRepository repository;
 
 
     public void syncCarParkInfoFile() throws CarParkInfoCSVSyncingException {
@@ -37,7 +37,31 @@ public class CarParkInfoCSVService {
             is = new FileInputStream(file);*/
             Resource resource = new ClassPathResource("csv/HDBCarparkInformation.csv");
             List<CarPark> carParks = csvToCarParkInfo(resource.getInputStream());
-            repository.saveAll(carParks);
+            for( CarPark carPark :  carParks) {
+
+                CarPark carParkToBeSaved  = null;
+                Optional<CarPark> carParkFromDbOpt = repository.findById(carPark.getCar_park_no());
+                if(! carParkFromDbOpt.isPresent()) {
+
+                    carParkToBeSaved = carPark;
+                } else {
+                    carParkToBeSaved = carParkFromDbOpt.get();
+                    carParkToBeSaved.setAddress(carPark.getAddress());
+                    //fixme: if coord changes we need to pull laltlong again
+                    carParkToBeSaved.setX_coord(carPark.getX_coord());
+                    carParkToBeSaved.setY_coord(carPark.getY_coord());
+                    carParkToBeSaved.setCar_park_basement(carPark.getCar_park_basement());
+                    carParkToBeSaved.setCar_park_decks(carPark.getCar_park_decks());
+                    carParkToBeSaved.setCar_park_type(carPark.getCar_park_type());
+                    carParkToBeSaved.setFree_parking(carPark.getFree_parking());
+                    carParkToBeSaved.setNight_parking(carPark.getNight_parking());
+                    carParkToBeSaved.setGantry_height(carPark.getGantry_height());
+                    carParkToBeSaved.setShort_term_parking(carPark.getShort_term_parking());
+                    carParkToBeSaved.setType_of_parking_system(carPark.getType_of_parking_system());
+                }
+                repository.save(carParkToBeSaved);
+            }
+
 
             System.out.print("hello");
 

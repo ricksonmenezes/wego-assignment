@@ -63,7 +63,34 @@ public class CarParksRestController extends RestTemplate {
 
             ResponseEntity<CarParkAvailabilityResponse> carparkResponse = restTemplate.exchange("https://api.data.gov.sg/v1/transport/carpark-availability", HttpMethod.GET, httpEntity, CarParkAvailabilityResponse.class);
 
+
             response =  new ResponseEntity<>(carparkResponse, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+
+            APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unable to perform client operation error" + e.getMessage());
+
+            response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+        }
+
+        return response;
+
+    }
+
+    @RequestMapping(value = "/v1/synccarparkavailability", method = RequestMethod.GET)
+    public ResponseEntity<?> syncCarParkAvailability()
+    {
+        ResponseEntity<?> response = null;
+
+        try {
+
+            carParkService.syncCarParkAvailability();
+
+            response =  new ResponseEntity<>(null, HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -111,6 +138,33 @@ public class CarParksRestController extends RestTemplate {
 
     @RequestMapping(value = "/v1/carparks", method = RequestMethod.POST)
     public ResponseEntity<?> saveCarParkInfoCSV()
+    {
+        ResponseEntity<?> response = null;
+        HttpEntity<String> httpEntity = new HttpEntity<>(new HttpHeaders());
+
+        try {
+
+            carParkService.saveCarParkInfoCSV();
+
+            response =  new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+
+            APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unable to perform client operation error" + e.getMessage());
+
+            response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+        }
+
+        return response;
+
+    }
+
+    @RequestMapping(value = "/v1/updatecarparkslatlong", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateCarParkToLatLong()
     {
         ResponseEntity<?> response = null;
         HttpEntity<String> httpEntity = new HttpEntity<>(new HttpHeaders());

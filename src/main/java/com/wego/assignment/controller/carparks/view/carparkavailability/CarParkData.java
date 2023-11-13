@@ -14,6 +14,9 @@ public class CarParkData {
     @JsonProperty("update_datetime")
     private String updateDateTime;
 
+    @JsonProperty("carpark_info")
+    List<CarParkInfo> carparkInfo;
+
     public String getCarparkNumber() {
         return carparkNumber;
     }
@@ -37,9 +40,6 @@ public class CarParkData {
     public void setCarparkInfo(List<CarParkInfo> carparkInfo) {
         this.carparkInfo = carparkInfo;
     }
-
-    @JsonProperty("carpark_info")
-    List<CarParkInfo> carparkInfo;
 
 
 }

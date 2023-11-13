@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class CarParkAvailability {
+public class CarParkAvailabilityView {
 
     @JsonProperty("timestamp")
     String timeStamp;

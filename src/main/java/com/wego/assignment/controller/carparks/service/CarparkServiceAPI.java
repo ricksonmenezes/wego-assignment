@@ -1,16 +1,16 @@
 package com.wego.assignment.controller.carparks.service;
 
+import com.wego.assignment.common.APIError;
 import com.wego.assignment.common.view.LatLong;
 import com.wego.assignment.controller.carparks.exception.CarParkAPIException;
 import com.wego.assignment.controller.carparks.exception.CarParkException;
+import com.wego.assignment.controller.carparks.view.CarParkAvailabilityResponse;
+import com.wego.assignment.controller.carparks.view.CarParkResponse;
 import com.wego.assignment.controller.carparks.view.OneMapTokenRequest;
 import com.wego.assignment.controller.carparks.view.OneMapToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -94,6 +94,24 @@ public class CarparkServiceAPI {
 
             throw new CarParkAPIException(e.getMessage(),e);
 
+        }
+
+    }
+
+    public CarParkAvailabilityResponse getCarParkAvailability() throws CarParkAPIException {
+
+        ResponseEntity<?> response = null;
+        HttpEntity<String> httpEntity = new HttpEntity<>(new HttpHeaders());
+
+        try {
+
+            ResponseEntity<CarParkAvailabilityResponse> carparkResponse = restTemplate.exchange("https://api.data.gov.sg/v1/transport/carpark-availability", HttpMethod.GET, httpEntity, CarParkAvailabilityResponse.class);
+            return carparkResponse.getBody();
+
+        }
+        catch (Exception e)
+        {
+            throw new CarParkAPIException(e.getMessage(),e);
         }
 
     }

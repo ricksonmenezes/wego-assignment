@@ -1,9 +1,6 @@
 package com.wego.assignment.controller.carparks.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "CarPark")
@@ -48,6 +45,9 @@ public class CarPark {
 
     @Column(name = "longitude")
     private Double longitude;
+
+    @Version
+    private Integer version;
 
     public CarPark(String car_park_no, String address, String x_coord, String y_coord, String car_park_type, String type_of_parking_system, String short_term_parking, String free_parking, String night_parking, String car_park_decks, String gantry_height, String car_park_basement) {
         this.car_park_no = car_park_no;
@@ -181,5 +181,12 @@ public class CarPark {
         this.longitude = longitude;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
 }
