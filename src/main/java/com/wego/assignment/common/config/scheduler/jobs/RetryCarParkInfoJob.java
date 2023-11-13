@@ -27,6 +27,7 @@ public class RetryCarParkInfoJob implements Job {
         try {
 
             System.out.print("job came in at " + new Date());
+            carParkInfoCSVService.syncCarParkInfoFile();
 
         }
         catch(Exception e)

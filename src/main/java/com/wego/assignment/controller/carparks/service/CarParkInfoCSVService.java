@@ -79,7 +79,7 @@ public class CarParkInfoCSVService {
 
             for (CSVRecord csvRecord : csvRecords) {
                 CarPark carPark = new CarPark(
-                        csvRecord.get("car_park_no"), csvRecord.get("address"), csvRecord.get("x_coord"), csvRecord.get("y_coord"), csvRecord.get("car_park_type"),
+                        csvRecord.get("car_park_no"), "add:" + csvRecord.get("address"), csvRecord.get("x_coord"), csvRecord.get("y_coord"), csvRecord.get("car_park_type"),
                         csvRecord.get("type_of_parking_system"), csvRecord.get("short_term_parking"), csvRecord.get("free_parking"),
                         csvRecord.get("night_parking"), csvRecord.get("car_park_decks"), csvRecord.get("gantry_height"), csvRecord.get("car_park_basement"));
 
