@@ -1,6 +1,6 @@
 spring:
       profiles:
-        active: local
+        active: dev
 
    #   datasource:
     #    url: ${JDBC_CONNECTION_STRING}
@@ -23,7 +23,7 @@ spring:
           ddl-auto: update
 
       datasource:
-       url: ${JDBC_CONNECTION_STRING}
-       username: ${JDBC_USER}
-       password: ${JDBC_PASSWORD}
+       url: jdbc:mysql://localhost:3306/hifinitedb?autoReconnect=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+       username: root
+       password: biddiaSQL
        driverClassName: com.mysql.cj.jdbc.Driver
