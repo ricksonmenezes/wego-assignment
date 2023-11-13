@@ -60,7 +60,7 @@ public class CarparkServiceAPI {
 
     }
 
-    public  LatLong getLatLongFromSvy21FromOneMap(double x, double y) throws CarParkAPIException {
+    public  LatLong getLatLongFromSvy21FromOneMap(Double x, Double y) throws CarParkAPIException {
 
         URI ApiUrl = null;
         Map<String, String> urlParams = new HashMap<>();
