@@ -46,4 +46,9 @@ Scalability
     tradeoff - We accrue a management API to load carpark latlongs. If this was being done on a larger scale say, 20,000 car parks, it would not be wise to make 20,000 API calls at once. 
     Concerns will range from being rate limited to account being suspended for a day. It is important to know how many requests does the vendor (e.g in this case, OpenMap) allow a user before the
     vendor deems any "feature" as supposed DOS attack.     
-   
+  
+ 3. Initially integrated pt. 2 - converter API. But it is not scalable as it only allows 250 API calls a minute and that would mean that the system is busy for 10 minutes. 
+    Hence, integrated SVY21 https://github.com/cgcai/SVY21 library that does the conversion offline. So now, no more management API. 
+    
+ 4. Using MySQL ST_DISTANCE point function to calculate shortest distance 
+    
