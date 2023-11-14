@@ -1,6 +1,7 @@
 package com.wego.assignment.common.config.scheduler;
 
 import com.wego.assignment.common.config.scheduler.jobs.RetryCarParkInfoJob;
+import com.wego.assignment.common.config.scheduler.jobs.RetryCarParkLiveDataJob;
 import org.quartz.JobDetail;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -28,13 +29,13 @@ public class QuartSubmitJobs {
     @Bean("retryCarParkLiveData")
     public JobDetailFactoryBean jobRetryCarParkLiveData() {
 
-        return QuartzConfig.createJobDetail(RetryCarParkInfoJob.class, "retry car park live data job");
+        return QuartzConfig.createJobDetail(RetryCarParkLiveDataJob.class, "retry car park live data job");
     }
 
 
     @Bean (name = "retryCarParkLiveDataTrigger")
     public CronTriggerFactoryBean triggerRetryCarParkLiveData (@Qualifier("retryCarParkLiveData") JobDetail jobDetail) {
 
-        return  QuartzConfig.createCronTrigger(jobDetail, "0 */1 * ? * *", "retry car park live data trigger");
+        return  QuartzConfig.createCronTrigger(jobDetail, "0/10 * * * * ? *", "retry car park live data trigger");
     }
 }
