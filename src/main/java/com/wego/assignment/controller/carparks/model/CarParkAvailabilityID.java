@@ -5,7 +5,16 @@ import java.io.Serializable;
 public class CarParkAvailabilityID implements Serializable {
 
     private String carParkNo;
-    private String lotType;;
+    private String lotType;
+
+    public CarParkAvailabilityID(String carParkNo, String lotType) {
+        this.carParkNo = carParkNo;
+        this.lotType = lotType;
+    }
+
+    public CarParkAvailabilityID() {
+
+    }
 
     public String getCarParkNo() {
         return carParkNo;

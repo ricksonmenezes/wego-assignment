@@ -44,7 +44,7 @@ public class CarParkCacheService {
             return  true;
         }
 
-        if(lotDataInCacheStale(liveCarParkLotInfo.getTotalLots(), liveCarParkLotInfo.getLotsAvailable(), carParkDataCache.getLotData())) {
+        if(lotDataInCacheStale(liveCarParkLotInfo.getLotType(), liveCarParkLotInfo.getTotalLots(), liveCarParkLotInfo.getLotsAvailable(), carParkDataCache.getLotData())) {
 
             return true;
         }
@@ -52,10 +52,10 @@ public class CarParkCacheService {
         return false;
     }
 
-    protected boolean lotDataInCacheStale(Integer totalLots, Integer lotsAvailable, List<LotData> lots) {
+    protected boolean lotDataInCacheStale(String liveCarParkLotType, Integer totalLots, Integer lotsAvailable, List<LotData> lots) {
 
 
-        boolean lotDataStillFresh  = lots.stream().allMatch(lot-> lot.getTotalLots().equals(totalLots) && lot.getAvailableLots().equals(lotsAvailable));
+        boolean lotDataStillFresh  = lots.stream().filter(lot -> lot.getLotType().equalsIgnoreCase(liveCarParkLotType)).allMatch(lot-> lot.getTotalLots().equals(totalLots) && lot.getAvailableLots().equals(lotsAvailable));
 
         if(! lotDataStillFresh) {
 
@@ -85,6 +85,8 @@ public class CarParkCacheService {
             lots.add(lotData);
             carParkDataCache1.setLotData(lots);
             carparkDataMap.put(carParkAvailability.getCarParkNo(), carParkDataCache1);
+            CarParkDataCache carParkDataCache2 = carparkDataMap.get(carParkAvailability.getCarParkNo());
+            System.out.print(carParkDataCache2);
 
         } else
         if(lotDataMissingInCache(carParkAvailability.getLotType(), carParkDataCache.getLotData())) {
@@ -96,6 +98,8 @@ public class CarParkCacheService {
             lotData.setTotalLots(carParkAvailability.getTotalLots());
             lotData.setAvailableLots(carParkAvailability.getAvailableLots());
             carParkLots.add(lotData);
+            CarParkDataCache carParkDataCache1 = carparkDataMap.get(carParkAvailability.getCarParkNo());
+            System.out.print(carParkDataCache1);
 
         } else {
 
@@ -103,8 +107,10 @@ public class CarParkCacheService {
             if(lotDataOptional.isPresent()) {
 
                 LotData lotData = lotDataOptional.get();
-                lotData.setAvailableLots(carParkAvailability.getTotalLots());
+                lotData.setAvailableLots(carParkAvailability.getAvailableLots());
                 lotData.setTotalLots(carParkAvailability.getTotalLots());
+                CarParkDataCache carParkDataCache1 = carparkDataMap.get(carParkAvailability.getCarParkNo());
+                System.out.print(carParkDataCache1);
             }
         }
 

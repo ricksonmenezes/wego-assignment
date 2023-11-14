@@ -5,14 +5,17 @@ import com.wego.assignment.controller.carparks.exception.CarParkAPIException;
 import com.wego.assignment.controller.carparks.exception.CarParkException;
 import com.wego.assignment.controller.carparks.model.CarPark;
 import com.wego.assignment.controller.carparks.model.CarParkAvailability;
+import com.wego.assignment.controller.carparks.model.CarParkAvailabilityID;
 import com.wego.assignment.controller.carparks.repo.CarParkAvailabilityRepo;
+import com.wego.assignment.controller.carparks.repo.CarParkRepo;
 import com.wego.assignment.controller.carparks.repo.CarParkRepository;
-import com.wego.assignment.controller.carparks.view.CarParkAvailabilityResponse;
-import com.wego.assignment.controller.carparks.view.CarParkDataCache;
-import com.wego.assignment.controller.carparks.view.LotData;
+import com.wego.assignment.controller.carparks.view.*;
 import com.wego.assignment.controller.carparks.view.carparkavailability.CarParkData;
 import com.wego.assignment.controller.carparks.view.carparkavailability.CarParkInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +39,9 @@ public class CarParkService  {
 
     @Autowired
     CarParkCacheService carParkCacheService;
+
+    @Autowired
+    CarParkRepo jdbcRepo;
 
 
     public LatLong convertSVY21ToLatLong(Double x, Double y) throws CarParkException {
@@ -81,6 +87,11 @@ public class CarParkService  {
 
             Date createdDate = new Date();
 
+            Map<String, TestAvailable> carParkCacheHits = new HashMap<>();
+            Map<String, TestAvailable> carParkCacheMisses = new HashMap<>();
+            List<String> carParkNos = new ArrayList<>();
+            List<String> carParkNosHits = new ArrayList<>();
+
             for (CarParkData liveCarParkData : liveCarParkLotsData) {
 
                 String carparkNo = liveCarParkData.getCarparkNumber();
@@ -89,22 +100,38 @@ public class CarParkService  {
 
                 for (final CarParkInfo liveCarParkLotInfo : liveCarParkLotInfos) {
 
+                    if(! carparkNo.equalsIgnoreCase("K52")) {
+                        continue;
+                    }
 
                     CarParkDataCache carParkDataCache = carParkCacheService.getCarparkDataMap().get(carparkNo);
 
+                    if(carparkNo.equalsIgnoreCase("C19M")) {
+                        System.out.println("do something");
+                    }
                     if (carParkCacheService.carParkCacheChanged(carParkDataCache, liveCarParkLotInfo)) {
 
+
                         //fixme: prepare a util method
+                        Optional<CarParkAvailability> carParkLiveDataOpt = carParkAvailabilityRepo.findById(new CarParkAvailabilityID(carparkNo, liveCarParkLotInfo.getLotType()));
                         CarParkAvailability carParkAvailability = new CarParkAvailability();
+                        if(carParkLiveDataOpt.isPresent()) {
+
+                             carParkAvailability = carParkLiveDataOpt.get();
+                        }  else {
+                            carParkAvailability.setCreatedDate(createdDate);
+                        }
+
                         carParkAvailability.setCarParkNo(carparkNo);
                         carParkAvailability.setAvailableLots(liveCarParkLotInfo.getLotsAvailable());
                         carParkAvailability.setTotalLots(liveCarParkLotInfo.getTotalLots());
                         carParkAvailability.setLotType(liveCarParkLotInfo.getLotType());
-                        carParkAvailability.setCreatedDate(createdDate);
                         carParkAvailability.setModifiedDate(createdDate);
 
                         try {
                             carParkCacheService.updateCarParkAvailability(carParkAvailability, carParkDataCache);
+                            carParkNosHits.add(carparkNo);
+
                         } catch (Exception e) {
 
                             //evicting entry of carpark no as it threw exception.
@@ -113,9 +140,17 @@ public class CarParkService  {
                             throw new CarParkException("something went wrong when updating CarparkAvailability with live data " + e.getMessage(), e);
                         }
 
+                    } else {
+                        carParkNos.add(carparkNo);
                     }
                 }
             }
+
+            carParkNos.stream().forEach(car->{ System.out.println("cache miss" + car); } );
+            System.out.println("cache miss for car parks: " + carParkNos.size());
+            carParkNosHits.stream().forEach(car->{ System.out.println("cache hit" + car); } );
+            System.out.println("cache hits for car parks: " + carParkNosHits.size());
+
 
         } catch (Exception e) {
             throw new CarParkException(e.getMessage(),e);
@@ -173,5 +208,15 @@ public class CarParkService  {
         return  carParkInfoCSVService.getAllCarParks();
     }
 
+    public List<NearestCarPark> nearestPoint(Double latitude, Double longitude, int page, int per_page) {
+
+
+        page = page - 1;
+        Pageable pageable = PageRequest.of(page, per_page);
+        Page<NearestCarPark> dataPage = jdbcRepo.findDemoByPage(latitude, longitude,pageable);
+        return dataPage.getContent();
+
+
+    }
 
 }
