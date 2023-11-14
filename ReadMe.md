@@ -22,12 +22,12 @@ Optimizations Done
 
 Optimizations foreseen but could not implement
 
-Spatial index and Point data type for performant queries on distance field. 
+Spatial index and Point data type for performant queries on distance field. But even without this the API is able to clock just 40 ms.  
 
 
 Scalability   
  
- 1. When carpark availability task is called by scheduler, the live data collected is first checked with map  - carparkDataMap - so that only those records are updated which have changed. 
+ 1. When carpark availability task is called by scheduler, the live data pulled is first checked with map  - carparkDataMap - so that only those records are updated which have changed. 
  
     carparkDataMap is a cache that consists of CarPark total and available slots for each lotType of a CarPark Number
         Why are we maintainint it? If the task to update live data runs every 30 seconds , we will have around 2000-4000 unnecessary updates every half minute 
@@ -39,7 +39,7 @@ Scalability
 
     tradeoff - this increases complexity of maintaining a in memory cache and makes it stateful. If application server is clustered, this memory cache will have to be offloaded onto a distributed cache. 
  
- 
+    benefits - Every minute, we have only around 700-900 car parks available_lots that change. This is around 30% of the data being updated instead.  
  
  2. There are presently ~ 2000 car parks. So as a maintenance task, we are finding lat long of all car parks by calling the api/common/convert/3414to4326 API and loading them into the database so that any user request does not have to make outbound API calls.
  
@@ -47,8 +47,18 @@ Scalability
     Concerns will range from being rate limited to account being suspended for a day. It is important to know how many requests does the vendor (e.g in this case, OpenMap) allow a user before the
     vendor deems any "feature" as supposed DOS attack.     
   
- 3. Initially integrated pt. 2 - converter API. But it is not scalable as it only allows 250 API calls a minute and that would mean that the system is busy for 10 minutes. 
+ 3. Initially integrated pt. 2 - converter API. But it is not scalable as it only allows 250 API calls a minute and that would mean that the system is busy for an initial 10 minutes. 
     Hence, integrated SVY21 https://github.com/cgcai/SVY21 library that does the conversion offline. So now, no more management API. 
+    Tradeoff - conversion by OneMap  is authorotative. On the other hand, one would have to validate the conversion being done by any offline library. 
     
- 4. Using MySQL ST_DISTANCE point function to calculate shortest distance 
+ 4. Using MySQL ST_DISTANCE_SPHERE point function to calculate shortest distance. The order by is on ST_Distance_Sphere(point(user latlong),point(carparks_latlong)). I used Spring-JDBC template
+ to return this result as it allowed me to write a clean native join  query + do pagination + do sorting. The issue with Spring JPA would be that having to do the trinity - 
+  native join query + pagination + sorting on a sql function would need an ingenious customization of which the tradeoff is time. I also believe that one size does not fit all
+  and I had to go with the tool that fit the purpose at the moment i.e I had a good handle on how ST_DIstance_Sphere works and went ahead with this approach. 
+  
+  The other approach could have been to sort on a geo-spatial column that is part of the entity. This would then allow a clean sort on an entity column. This kind of a 
+  Point column is available in specialized hibernate libraries. I did not explore it too much due to time constraints.
+  
+ 5. I have used auto-update for table creation for the sake convenience. Obviously, no one does this on prod but it really speeds up work on initial proof of concept for which
+    the assesment is a good candidate.
     
