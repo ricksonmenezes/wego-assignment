@@ -12,12 +12,12 @@ public class NearestCarParkRowMapper implements RowMapper<NearestCarPark> {
     @Override
     public NearestCarPark mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new NearestCarPark(
-                rs.getString("carParkNo"),
                 rs.getString("address"),
                 rs.getDouble("latitude"),
                 rs.getDouble("longitude"),
                 rs.getInt("totalLots"),
-                rs.getInt("availableLots")
+                rs.getInt("availableLots"),
+                rs.getDouble("distance")
 
         );
     }

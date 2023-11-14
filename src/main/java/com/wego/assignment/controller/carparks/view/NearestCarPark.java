@@ -1,22 +1,38 @@
 package com.wego.assignment.controller.carparks.view;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class NearestCarPark {
 
-    private String carParkNo;
+
     private String address;
     private Double latitude;
     private Double longitude;
+    @JsonProperty("total_lots")
     private Integer totalLots;
+    @JsonProperty("available_lots")
     private Integer availableLots;
 
-    public NearestCarPark(String carParkNo, String address, double latitude, double longitude, int totalLots, int availableLots) {
+    public Double getDistance() {
+        return distance;
+    }
 
-        this.carParkNo = carParkNo;
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    @JsonIgnore
+    private Double distance;
+
+    public NearestCarPark(String address, double latitude, double longitude, int totalLots, int availableLots, Double distance) {
+
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.totalLots = totalLots;
         this.availableLots = availableLots;
+        this.distance = distance;
     }
 
     public String getAddress() {
@@ -57,15 +73,6 @@ public class NearestCarPark {
 
     public void setAvailableLots(Integer availableLots) {
         this.availableLots = availableLots;
-    }
-
-
-    public String getCarParkNo() {
-        return carParkNo;
-    }
-
-    public void setCarParkNo(String carParkNo) {
-        this.carParkNo = carParkNo;
     }
 
 }
