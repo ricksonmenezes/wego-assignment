@@ -7,6 +7,7 @@ import com.wego.assignment.controller.carparks.model.CarPark;
 import com.wego.assignment.controller.carparks.service.CarParkService;
 import com.wego.assignment.controller.carparks.view.CarParkAvailabilityResponse;
 import com.wego.assignment.controller.carparks.view.CarParkResponse;
+import com.wego.assignment.controller.carparks.view.NearestCarPark;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
@@ -28,16 +29,19 @@ public class CarParksRestController extends RestTemplate {
 
 
     @RequestMapping(value = "/nearest", method = RequestMethod.GET)
-    public ResponseEntity<?> nearestCarPark(@RequestParam(value ="X") double latitude,
-                                                   @RequestParam(value ="Y") double longitude)
+    public ResponseEntity<?> nearestCarPark(@RequestParam(value ="latitude") Double latitude,
+                                                   @RequestParam(value ="longitude") Double longitude,
+                                            @RequestParam(value ="page") int page,
+                                            @RequestParam(value ="per_page") int per_page)
     {
         ResponseEntity<?> response = null;
         HttpEntity<String> httpEntity = new HttpEntity<>(new HttpHeaders());
         try {
 
-            ResponseEntity<CarParkAvailabilityResponse> carparkResponse = restTemplate.exchange("https://api.data.gov.sg/v1/transport/carpark-availability", HttpMethod.GET, httpEntity, CarParkAvailabilityResponse.class);
 
-            response =  new ResponseEntity<>(carparkResponse, HttpStatus.OK);
+            List<NearestCarPark> nearestCarParkData =  carParkService.nearestPoint(latitude, longitude, page, per_page);
+
+            response =  new ResponseEntity<>(nearestCarParkData, HttpStatus.OK);
         }
         catch (Exception e)
         {
