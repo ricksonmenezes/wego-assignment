@@ -33,4 +33,12 @@ public class CarParkDataCache {
     public void setLotData(List<LotData> lotData) {
         this.lotData = lotData;
     }
+
+    @Override
+    public String toString() {
+        return "CarParkDataCache{" +
+                "carparkNo='" + carparkNo + '\'' +
+                ", lotData=" + lotData +
+                '}';
+    }
 }

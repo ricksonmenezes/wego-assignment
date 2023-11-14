@@ -29,4 +29,13 @@ public class LotData {
     public void setTotalLots(Integer totalLots) {
         this.totalLots = totalLots;
     }
+
+    @Override
+    public String toString() {
+        return "LotData{" +
+                "lotType='" + lotType + '\'' +
+                ", availableLots=" + availableLots +
+                ", totalLots=" + totalLots +
+                '}';
+    }
 }
