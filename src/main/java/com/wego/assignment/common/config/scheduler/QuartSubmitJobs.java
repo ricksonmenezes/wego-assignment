@@ -36,6 +36,6 @@ public class QuartSubmitJobs {
     @Bean (name = "retryCarParkLiveDataTrigger")
     public CronTriggerFactoryBean triggerRetryCarParkLiveData (@Qualifier("retryCarParkLiveData") JobDetail jobDetail) {
 
-        return  QuartzConfig.createCronTrigger(jobDetail, "0/10 * * * * ? *", "retry car park live data trigger");
+        return  QuartzConfig.createCronTrigger(jobDetail, "0/30 * * * * ? *", "retry car park live data trigger");
     }
 }
