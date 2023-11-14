@@ -100,15 +100,9 @@ public class CarParkService  {
 
                 for (final CarParkInfo liveCarParkLotInfo : liveCarParkLotInfos) {
 
-                    if(! carparkNo.equalsIgnoreCase("K52")) {
-                        continue;
-                    }
-
                     CarParkDataCache carParkDataCache = carParkCacheService.getCarparkDataMap().get(carparkNo);
 
-                    if(carparkNo.equalsIgnoreCase("C19M")) {
-                        System.out.println("do something");
-                    }
+
                     if (carParkCacheService.carParkCacheChanged(carParkDataCache, liveCarParkLotInfo)) {
 
 
