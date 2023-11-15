@@ -11,6 +11,13 @@ Adding access token to memory and only requesting it when expiry is close to ser
  rest template - token from interceptor
  token only if it is expired to avid network calls
  
+ 
+ TEST APIs
+ 
+ Every sub feature - dumping csv data, pulling live data and dumping the changes, converting SVy21 to latlong etc - all have test APIs
+ 
+ 
+ 
  Database artifacts 
   
  CarPark
@@ -31,8 +38,7 @@ Adding access token to memory and only requesting it when expiry is close to ser
  
  
 
-
-TASKS
+SCHEDULER TASKS
 
 1. There is a task - RetryCarParkInfo job that updates everything from the file into the CarPark table. As the download is out of scope, it assumes
    that the file from the resource folder is latest. This task runs every 30 mins. Only in case the SVY21 of any record changes, we also update its
