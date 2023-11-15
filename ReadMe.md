@@ -1,16 +1,22 @@
-CarParkAPIAService - for consumers to know that network calls are made  when calling this service
 
-Adding access token to memory and only requesting it when expiry is close to server time. This can reduce 1 network call.
+ INSTRUCTIONS TO RUN PROJECT
+1. clone the repo using below url. You will need git installed on your machine and cmd/bash access  (cmd for windows)
 
- Docker artifacts are instructions, they are pushed to git. So credentials into env so the are not hardcoded into docker artifacts.
- 
- 
- 
- scheduled a task. ideally, it should be a clustered scheduler so that the scheduler can run seamlessly on any server.
- 
- rest template - token from interceptor
- token only if it is expired to avid network calls
- 
+    git clone https://github.com/ricksonmenezes/wego-assignment.git
+
+2. You will see a folder called wego-assignment. Enter that folder. On a test machine, from cmd, I was only able to see the read me file. 
+    You can run command: 
+        git branch 
+    and it will display the name of the branch "main". 
+
+3. Run the command: docker-compose up --build
+    This command will download mvn that will build the jar file and copy it to app docker image and then run two containers from the two images
+    of mysql and java. The java I have used is Java 8 as I am most familiar with it.
+    
+    If all goes well, there is no need to run any other command.  
+
+ ARTIFACTS:
+ Docker artifacts are instructions, they are pushed to git. So credentials into env so the are not hardcoded into docker artifacts. 
  
  TEST APIs
  
@@ -45,15 +51,16 @@ SCHEDULER TASKS
    corresponding lat/long which is maintained in the same table.
    
 2. Another task - RetryCarParkLiveData job calls car park availability API every 30 seconds and updates all records into CarParkAvailability table. 
-   Next time it runs, it will only update the changes between the table and live data from API.  
+   Next time it runs, it will only update the changes between the table and live data from API.
+   
+3. It is to be noted that although the RetryCarParkInfo can update the CarPark static data on a timely fashion, the /nearest API will not work 
+   until CarPark data is not present. Hence I have used the strategy to load CarPark data on application startup for initial load.   
  
 
 Optimizations Done
 
 1. Version column that hibernate can maintain for optimistic locking to mitigate concurrency issues. 
-
-2. The token is called via the rest template interceptor thereby abstracting this grunt work. We have also checked if the token is valid in order to reduce network calls. 
-
+ 
 
 Optimizations foreseen but could not implement
 
@@ -62,6 +69,8 @@ Optimizations foreseen but could not implement
 2. Adding foreign key relation ship between CarPark and CarParkAvailability
 
 3. Adding scripts to docker  
+
+4. Adding token to interceptor so that token call is abstracted and only done when token is expired there by reducing network calls. 
 
 
 Scalability   
@@ -86,7 +95,7 @@ Scalability
     Concerns will range from being rate limited to account being suspended for a day. It is important to know how many requests does the vendor (e.g in this case, OpenMap) allow a user before the
     vendor deems any "feature" as supposed DOS attack.     
   
- 3. Initially integrated pt. 2 - converter API. But it is not scalable as it only allows 250 API calls a minute and that would mean that the system is busy for an initial 10 minutes. 
+ 3. Conversion library instead of converter API: Initially integrated pt. 2 - converter API. But it is not scalable as it only allows 250 API calls a minute and that would mean that the system is busy for an initial 10 minutes. 
     Hence, integrated SVY21 https://github.com/cgcai/SVY21 library that does the conversion offline. So now, no more management API. 
     Tradeoff - conversion by OneMap  is authorotative. On the other hand, one would have to validate the conversion being done by any offline library. 
     
@@ -105,3 +114,14 @@ Scalability
  1. I have used auto-update for table creation for the sake convenience. Obviously, no one does this on prod but it really speeds up work on initial proof of concept for which
     the assesment is a good candidate.
     
+  
+  KNOWN ISSUES
+  
+ 1. when I log into the mysql service, I can see my sql artifacts - CarPar & CarParkAvailability. But I can also see two additional tables 
+    with no data car_park and car_park_availability. perhaps this is the consequence of using the auto-update to create schemas. 
+ 
+ 2. Testing this once on an independent machine made mysql service start after Spring server initalization and hibernate could not get 
+    communication inspite of the "depends on" docker instruction. Turns out that "depends on" only makes the spring container wait(depends)
+     on the mysql container to run not to be healthy. I have added certain mysql health checks and made spring server depend on the health
+     check. Hopefully this is not deprecated. In case app server on start-up has a communication link failure. One can run 
+     docker-compose up --build again and it should work. 
