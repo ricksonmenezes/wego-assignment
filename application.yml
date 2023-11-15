@@ -1,0 +1,29 @@
+spring:
+      profiles:
+        active: dev
+
+   #   datasource:
+    #    url: ${JDBC_CONNECTION_STRING}
+    #    username: ${JDBC_USER}
+     #   password: ${JDBC_PASSWORD}
+     #   driverClassName: com.mysql.cj.jdbc.Driver
+
+      jpa:
+        show-sql: true
+        generate-ddl: false
+        properties:
+          hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        hibernate:
+
+          jdbc.batch_size:  100
+          jdbc.time_zone: UTC
+          naming:
+            implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+          ddl-auto: update
+
+      datasource:
+       url: jdbc:mysql://localhost:3306/hifinitedb?autoReconnect=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+       username: root
+       password: biddiaSQL
+       driverClassName: com.mysql.cj.jdbc.Driver
