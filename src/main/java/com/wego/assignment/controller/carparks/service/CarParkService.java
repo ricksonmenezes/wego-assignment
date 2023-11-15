@@ -87,10 +87,8 @@ public class CarParkService  {
 
             Date createdDate = new Date();
 
-            Map<String, TestAvailable> carParkCacheHits = new HashMap<>();
-            Map<String, TestAvailable> carParkCacheMisses = new HashMap<>();
-            List<String> carParkNos = new ArrayList<>();
-            List<String> carParkNosHits = new ArrayList<>();
+            /*List<String> carParkNos = new ArrayList<>();
+            List<String> carParkNosHits = new ArrayList<>();*/
 
             for (CarParkData liveCarParkData : liveCarParkLotsData) {
 
@@ -124,7 +122,7 @@ public class CarParkService  {
 
                         try {
                             carParkCacheService.updateCarParkAvailability(carParkAvailability, carParkDataCache);
-                            carParkNosHits.add(carparkNo);
+                            //carParkNosHits.add(carparkNo);
 
                         } catch (Exception e) {
 
@@ -134,16 +132,14 @@ public class CarParkService  {
                             throw new CarParkException("something went wrong when updating CarparkAvailability with live data " + e.getMessage(), e);
                         }
 
-                    } else {
-                        carParkNos.add(carparkNo);
                     }
                 }
             }
 
-            carParkNos.stream().forEach(car->{ System.out.println("cache miss" + car); } );
+            /*carParkNos.stream().forEach(car->{ System.out.println("cache miss" + car); } );
             System.out.println("cache miss for car parks: " + carParkNos.size());
             carParkNosHits.stream().forEach(car->{ System.out.println("cache hit" + car); } );
-            System.out.println("cache hits for car parks: " + carParkNosHits.size());
+            System.out.println("cache hits for car parks: " + carParkNosHits.size());*/
 
 
         } catch (Exception e) {
