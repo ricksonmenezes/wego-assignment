@@ -13,7 +13,12 @@
     This command will download mvn that will build the jar file and copy it to app docker image and then run two containers from the two images
     of mysql and java. The java I have used is Java 8 as I am most familiar with it.
     
-    If all goes well, there is no need to run any other command.  
+    If all goes well, there is no need to run any other command.
+    
+4. You could use postman, curl or even the browser to call API 
+    
+    http://localhost:8080/carparks/nearest?latitude=1.37326&longitude=103.897&page=1&per_page=10       
+
 
  ARTIFACTS:
  Docker artifacts are instructions, they are pushed to git. So credentials into env so the are not hardcoded into docker artifacts. 
