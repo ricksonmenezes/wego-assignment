@@ -15,6 +15,11 @@ services:
       - 3307
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+          test: ["CMD-SHELL", 'mysqladmin ping']
+          interval: 10s
+          timeout: 2s
+          retries: 10
 
   web:
       image: assignment
@@ -24,7 +29,8 @@ services:
       ports:
         - 8080:8080
       depends_on:
-        - db
+        db:
+          condition: service_healthy
       environment:
         SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
         SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
