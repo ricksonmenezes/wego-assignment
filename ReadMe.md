@@ -64,7 +64,7 @@ Optimizations Done
 
 Optimizations foreseen but could not implement
 
-1. Spatial index and Point data type for performant queries on distance field. But even without this,  the /nearest API is able to clock just 40 ms.
+1. Spatial index and Point data type for performant queries on distance field. Presently,  the /nearest API clocks 100-200 ms
 
 2. Adding foreign key relation ship between CarPark and CarParkAvailability
 
