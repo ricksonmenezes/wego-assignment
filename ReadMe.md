@@ -75,7 +75,10 @@ Optimizations foreseen but could not implement
 
 3. Adding scripts to docker  
 
-4. Adding token to interceptor so that token call is abstracted and only done when token is expired there by reducing network calls. 
+4. Adding token to interceptor so that token call is abstracted and only done when token is expired there by reducing network calls.
+
+5. Presently all car park data every 30 mins is indiscriminately updated. Using Javers library, we can check if there are changes between
+   the csv car park data and DB data and only then update it. This would save us 2000 updates each time as changes to static data is rare.  
 
 
 Scalability   
