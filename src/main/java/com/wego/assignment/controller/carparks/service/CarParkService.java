@@ -103,7 +103,6 @@ public class CarParkService  {
 
                     if (carParkCacheService.carParkCacheChanged(carParkDataCache, liveCarParkLotInfo)) {
 
-
                         //fixme: prepare a util method
                         Optional<CarParkAvailability> carParkLiveDataOpt = carParkAvailabilityRepo.findById(new CarParkAvailabilityID(carparkNo, liveCarParkLotInfo.getLotType()));
                         CarParkAvailability carParkAvailability = new CarParkAvailability();
@@ -136,31 +135,12 @@ public class CarParkService  {
                 }
             }
 
-            /*carParkNos.stream().forEach(car->{ System.out.println("cache miss" + car); } );
-            System.out.println("cache miss for car parks: " + carParkNos.size());
-            carParkNosHits.stream().forEach(car->{ System.out.println("cache hit" + car); } );
-            System.out.println("cache hits for car parks: " + carParkNosHits.size());*/
-
 
         } catch (Exception e) {
             throw new CarParkException(e.getMessage(),e);
         }
 
     }
-
-
-    /*void updateCarParkAvailability(CarParkAvailability carParkAvailability, CarParkDataCache carParkDataCache) throws CarParkException {
-
-
-        *//*Optional<CarPark> carPark = carParkRepository.findById(carParkAvailability.getCarParkNo());
-        if(!carPark.isPresent()) {
-            throw new CarParkException("static data of CarPark was not found, cannot proceed with update of car park availablity and its cache");
-        }*//*
-
-        carParkAvailabilityRepo.save(carParkAvailability);
-        carParkCacheService.updateCacheWithLiveLotData(carParkDataCache, carParkAvailability);
-
-    }*/
 
 
     public void saveCarParkInfoCSV()  throws CarParkException {
@@ -184,7 +164,6 @@ public class CarParkService  {
 
                 try {
                     LatLong latLong = convertSVY21ToLatLong(new Double(carPark.getX_coord()), new Double(carPark.getY_coord()));
-
 
                 } catch (CarParkException e) {
                     e.printStackTrace();
