@@ -11,7 +11,36 @@ Adding access token to memory and only requesting it when expiry is close to ser
  rest template - token from interceptor
  token only if it is expired to avid network calls
  
-static information. 
+ Database artifacts 
+  
+ CarPark
+ 
+ The CSV that contains static data about carpark such as address, parking type etc that rarely change are dumped nto CarPark table. 
+ 
+ CarParkAvailability
+ 
+ Live data that has total and available lots according to lot type - car motorcycle, heavy vehical - are dumped into CarParkAvailability. 
+ 
+ CORE LOGIC
+ 
+ Query that can list all car parks by minimum distance when comparing lat/long point provided by user to latlong of car parks. Only compare this for 
+ those car parks that have available lots.
+ 
+ The simplicity of above logic is that we are not pulling hundreds of records from DB  and then analysing it at the application level.
+  This analysis is offloaded to the database which does it best via SQL declarative syntax that is easy to control. 
+ 
+ 
+
+
+TASKS
+
+1. There is a task - RetryCarParkInfo job that updates everything from the file into the CarPark table. As the download is out of scope, it assumes
+   that the file from the resource folder is latest. This task runs every 30 mins. Only in case the SVY21 of any record changes, we also update its
+   corresponding lat/long which is maintained in the same table.
+   
+2. Another task - RetryCarParkLiveData job calls car park availability API every 30 seconds and updates all records into CarParkAvailability table. 
+   Next time it runs, it will only update the changes between the table and live data from API.  
+ 
 
 Optimizations Done
 
@@ -22,7 +51,11 @@ Optimizations Done
 
 Optimizations foreseen but could not implement
 
-Spatial index and Point data type for performant queries on distance field. But even without this the API is able to clock just 40 ms.  
+1. Spatial index and Point data type for performant queries on distance field. But even without this,  the /nearest API is able to clock just 40 ms.
+
+2. Adding foreign key relation ship between CarPark and CarParkAvailability
+
+3. Adding scripts to docker  
 
 
 Scalability   
@@ -51,7 +84,9 @@ Scalability
     Hence, integrated SVY21 https://github.com/cgcai/SVY21 library that does the conversion offline. So now, no more management API. 
     Tradeoff - conversion by OneMap  is authorotative. On the other hand, one would have to validate the conversion being done by any offline library. 
     
- 4. Using MySQL ST_DISTANCE_SPHERE point function to calculate shortest distance. The order by is on ST_Distance_Sphere(point(user latlong),point(carparks_latlong)). I used Spring-JDBC template
+ FINDING NEAREST CAR PARK   
+    
+ 1. Using MySQL ST_DISTANCE_SPHERE point function to calculate shortest distance. The order by is on ST_Distance_Sphere(point(user latlong),point(carparks_latlong)). I used Spring-JDBC template
  to return this result as it allowed me to write a clean native join  query + do pagination + do sorting. The issue with Spring JPA would be that having to do the trinity - 
   native join query + pagination + sorting on a sql function would need an ingenious customization of which the tradeoff is time. I also believe that one size does not fit all
   and I had to go with the tool that fit the purpose at the moment i.e I had a good handle on how ST_DIstance_Sphere works and went ahead with this approach. 
@@ -59,6 +94,8 @@ Scalability
   The other approach could have been to sort on a geo-spatial column that is part of the entity. This would then allow a clean sort on an entity column. This kind of a 
   Point column is available in specialized hibernate libraries. I did not explore it too much due to time constraints.
   
- 5. I have used auto-update for table creation for the sake convenience. Obviously, no one does this on prod but it really speeds up work on initial proof of concept for which
+  IMPROVIZATIONS
+  
+ 1. I have used auto-update for table creation for the sake convenience. Obviously, no one does this on prod but it really speeds up work on initial proof of concept for which
     the assesment is a good candidate.
     
