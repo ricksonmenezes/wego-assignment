@@ -47,7 +47,7 @@ public class CarParksRestController extends RestTemplate {
         {
 
             APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unable to perform client operation error" + e.getMessage());
+                    "Unable to perform client operation error: " + e.getMessage());
 
             response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -74,7 +74,7 @@ public class CarParksRestController extends RestTemplate {
         {
 
             APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unable to perform client operation error" + e.getMessage());
+                    "Unable to perform client operation error: " + e.getMessage());
 
             response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -100,7 +100,7 @@ public class CarParksRestController extends RestTemplate {
         {
 
             APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unable to perform client operation error" + e.getMessage());
+                    "Unable to perform client operation error: " + e.getMessage());
 
             response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -129,7 +129,7 @@ public class CarParksRestController extends RestTemplate {
         {
 
             APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unable to perform client operation error" + e.getMessage());
+                    "Unable to perform client operation error: " + e.getMessage());
 
             response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -156,7 +156,7 @@ public class CarParksRestController extends RestTemplate {
         {
 
             APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unable to perform client operation error" + e.getMessage());
+                    "Unable to perform client operation error: " + e.getMessage());
 
             response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -183,7 +183,7 @@ public class CarParksRestController extends RestTemplate {
         {
 
             APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unable to perform client operation error" + e.getMessage());
+                    "Unable to perform client operation error: " + e.getMessage());
 
             response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -210,7 +210,7 @@ public class CarParksRestController extends RestTemplate {
         {
 
             APIError apiError = new APIError(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Unable to perform client operation error" + e.getMessage());
+                    "Unable to perform client operation error: " + e.getMessage());
 
             response =  new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
 

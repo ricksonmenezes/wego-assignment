@@ -2,6 +2,7 @@ package com.wego.assignment.controller.carparks.service;
 
 import com.wego.assignment.common.view.LatLong;
 import com.wego.assignment.controller.carparks.exception.CarParkAPIException;
+import com.wego.assignment.controller.carparks.exception.CarParkDBException;
 import com.wego.assignment.controller.carparks.exception.CarParkException;
 import com.wego.assignment.controller.carparks.model.CarPark;
 import com.wego.assignment.controller.carparks.model.CarParkAvailability;
@@ -177,13 +178,23 @@ public class CarParkService  {
         return  carParkInfoCSVService.getAllCarParks();
     }
 
-    public List<NearestCarPark> nearestPoint(Double latitude, Double longitude, int page, int per_page) {
+    public List<NearestCarPark> nearestPoint(Double latitude, Double longitude, int page, int per_page) throws CarParkException {
 
 
-        page = page - 1;
-        Pageable pageable = PageRequest.of(page, per_page);
-        Page<NearestCarPark> dataPage = jdbcRepo.findDemoByPage(latitude, longitude,pageable);
-        return dataPage.getContent();
+        try {
+            if (latitude == null || longitude == null || (latitude < -90 || latitude > 90) || (longitude < -180 || longitude > 180)) {
+                throw new CarParkException("provided lat long are not valid.");
+            }
+
+            page = page - 1;
+            Pageable pageable = PageRequest.of(page, per_page);
+            Page<NearestCarPark> dataPage = jdbcRepo.findDemoByPage(latitude, longitude, pageable);
+            return dataPage.getContent();
+        } catch (CarParkDBException e) {
+            throw new CarParkException("Something went wrong when querying database to find nearest car parks");
+        } catch (Exception e) {
+            throw new CarParkException(e.getMessage(),e);
+        }
 
 
     }
