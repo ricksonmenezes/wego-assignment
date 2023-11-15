@@ -142,8 +142,9 @@ Scalability
      changed. checking the last time the timestamp changed would have been a "go by the documentation" approach. What I have done is to directly 
      check if the available lots have changed without relying on the timestamp they provide of "last time since changed" i.e only if my assumptions 
      are true that that is indeed what that mean. In fact, if it is indeed true that that is what the timestamp means, I admit that I ought to have 
-     dumped the entire data. This would mean to have to futher normalize the table. items.timestamp could be part of a class member checking if
-      there are any updates since the last time task queried live data.
+     dumped the entire data - I have only added carpakno, totalLots, availableLots as part of the CarParkAvailability model. This would mean to have 
+     to futher normalize the table. items.timestamp could be part of a class member checking if there are any updates since the last time task queried
+      live data.
       
       Alternatively, Not sure about the car park data but car par availability data is a good 
       candidate for mongo db collection.      
