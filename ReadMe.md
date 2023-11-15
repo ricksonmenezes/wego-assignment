@@ -133,3 +133,17 @@ Scalability
      on the mysql container to run not to be healthy. I have added certain mysql health checks and made spring server depend on the health
      check. Hopefully this is not deprecated. In case app server on start-up has a communication link failure. One can run 
      docker-compose up --build again and it should work. 
+  
+  3. As one time load is done on start-up, restarting the app is again going to try to sync the car par static data.
+     Due to time constraints have not been able to optimize this 
+  
+  4. As task is calling car par availability API every 30 seconds and I was not able to find documentation for /carpark-availability API on onemap, 
+     I ignored the timestamp & update_timestamp variables. I have now realized that perhaps they indicate the last time since the carpark info
+     changed. checking the last time the timestamp changed would have been a "go by the documentation" approach. What I have done is to directly 
+     check if the available lots have changed without relying on the timestamp they provide of "last time since changed" i.e only if my assumptions 
+     are true that that is indeed what that mean. In fact, if it is indeed true that that is what the timestamp means, I admit that I ought to have 
+     dumped the entire data. This would mean to have to futher normalize the table. items.timestamp could be part of a class member checking if
+      there are any updates since the last time task queried live data.
+      
+      Alternatively, Not sure about the car park data but car par availability data is a good 
+      candidate for mongo db collection.      
