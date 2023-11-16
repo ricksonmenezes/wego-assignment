@@ -83,7 +83,9 @@ Optimizations foreseen but could not implement
 5. Presently all car park data every 30 mins is indiscriminately updated. Using Javers library, we can check if there are changes between
    the csv car park data and DB data and only then update it. This would save us 2000 updates each time as changes to static data is rare.
    
-6. Could not get time to move all the hard-coded API urls and one map credentials to a separate file like yaml etc.      
+6. Could not get time to move all the hard-coded API urls and one map credentials to a separate file like yaml etc.
+
+7. Could not do JVM memory configuration.      
 
 
 Scalability   
