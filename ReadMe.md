@@ -156,3 +156,8 @@ Scalability
       
       Alternatively, Not sure about the car park data but car par availability data is a good 
       candidate for mongo db collection.      
+     
+  5. Nearest CarPark  to user provided location may sometimes still be father away on Google Maps as Google Maps is doing the nearest
+     location possible by shortest street-navigable route and I have pursued shortest spherical distance i.e shortest line that can be drawn
+     from car park to user provided lat/long.   
+       
