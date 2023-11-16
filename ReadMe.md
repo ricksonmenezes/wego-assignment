@@ -11,7 +11,7 @@
 2. You will see a folder called wego-assignment. Enter that folder. On a test machine, from cmd, I was only able to see the read me file. 
     You can run command: 
         git branch 
-    and it will display the name of the branch "main". 
+    and it will display the name of the branch "main". Please make sure the branch checked out is main. before proceeding to pt.3
 
 3. Run the command: docker-compose up --build
     This command will download mvn that will build the jar file and copy it to app docker image and then run two containers from the two images
