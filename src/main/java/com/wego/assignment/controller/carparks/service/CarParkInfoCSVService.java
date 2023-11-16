@@ -37,10 +37,12 @@ public class CarParkInfoCSVService {
     TaskExecutor taskExecutor;
 
     @PostConstruct
-    private void callthis() {
+    private void oneTimeSyncWhenServerStarts() {
 
         try {
+
             syncCarParkInfoFile();
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -55,9 +57,6 @@ public class CarParkInfoCSVService {
 
             //readfile
 
-            //add some limit to the file being read into
-            /*File file = ResourceUtils.getFile("classpath:csv/HDBCarparkInformation.csv");
-            is = new FileInputStream(file);*/
             Resource resource = new ClassPathResource("csv/HDBCarparkInformation.csv");
             List<CarPark> carParksFromCSV = csvToCarParkInfo(resource.getInputStream());
 
@@ -66,52 +65,22 @@ public class CarParkInfoCSVService {
 
                 CarPark carParkToBeSaved  = null;
                 Optional<CarPark> carParkFromDbOpt = repository.findById(carParkFromCSV.getCar_park_no());
+
                 if(! carParkFromDbOpt.isPresent()) {
 
                     carParkToBeSaved = carParkFromCSV;
 
                 } else {
                     carParkToBeSaved = carParkFromDbOpt.get();
-                    carParkToBeSaved.setAddress(carParkFromCSV.getAddress());
-                    //fixme: if coord changes we need to pull laltlong again
-                    carParkToBeSaved.setX_coord(carParkFromCSV.getX_coord());
-                    carParkToBeSaved.setY_coord(carParkFromCSV.getY_coord());
-                    carParkToBeSaved.setCar_park_basement(carParkFromCSV.getCar_park_basement());
-                    carParkToBeSaved.setCar_park_decks(carParkFromCSV.getCar_park_decks());
-                    carParkToBeSaved.setCar_park_type(carParkFromCSV.getCar_park_type());
-                    carParkToBeSaved.setFree_parking(carParkFromCSV.getFree_parking());
-                    carParkToBeSaved.setNight_parking(carParkFromCSV.getNight_parking());
-                    carParkToBeSaved.setGantry_height(carParkFromCSV.getGantry_height());
-                    carParkToBeSaved.setShort_term_parking(carParkFromCSV.getShort_term_parking());
-                    carParkToBeSaved.setType_of_parking_system(carParkFromCSV.getType_of_parking_system());
+                    carParkToBeSaved = updateCarParkDBObjectFromCSV(carParkToBeSaved, carParkFromCSV);
 
                 }
 
                 //if CarPark Info is being saved for first time or if CarPark has shifted i.e its X,Y cord is different from one in DB, then call converto4326 API to update lat long
-                if(latlongHasChanged(carParkToBeSaved, carParkFromCSV)) {
 
-                    LatLong latLong = null;
-                    try {
-                        //latLong = carparkServiceAPI.getLatLongFromSvy21FromOneMap(new Double(carParkFromCSV.getX_coord()), new Double(carParkFromCSV.getY_coord()));
+                carParkToBeSaved = upddateLatLongInCarParkData(carParkToBeSaved, carParkFromCSV);
 
-                        Double easting = new Double(carParkFromCSV.getX_coord());
-                        Double northing = new Double(carParkFromCSV.getY_coord());
-
-                        LatLonCoordinate latLonCoordinate = SVY21.computeLatLon(northing, easting);
-                        carParkToBeSaved.setLatitude(latLonCoordinate.getLatitude());
-                        carParkToBeSaved.setLongitude(latLonCoordinate.getLongitude());
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-
-                    }
-
-                }
-
-                //fixme: version field does not update on save()
                 repository.save(carParkToBeSaved);
-
-
 
             }
 
@@ -127,6 +96,40 @@ public class CarParkInfoCSVService {
 
     }
 
+
+    private CarPark updateCarParkDBObjectFromCSV(CarPark carParkToBeSaved, CarPark carParkFromCSV) {
+
+        carParkToBeSaved.setAddress(carParkFromCSV.getAddress());
+        carParkToBeSaved.setX_coord(carParkFromCSV.getX_coord());
+        carParkToBeSaved.setY_coord(carParkFromCSV.getY_coord());
+        carParkToBeSaved.setCar_park_basement(carParkFromCSV.getCar_park_basement());
+        carParkToBeSaved.setCar_park_decks(carParkFromCSV.getCar_park_decks());
+        carParkToBeSaved.setCar_park_type(carParkFromCSV.getCar_park_type());
+        carParkToBeSaved.setFree_parking(carParkFromCSV.getFree_parking());
+        carParkToBeSaved.setNight_parking(carParkFromCSV.getNight_parking());
+        carParkToBeSaved.setGantry_height(carParkFromCSV.getGantry_height());
+        carParkToBeSaved.setShort_term_parking(carParkFromCSV.getShort_term_parking());
+        carParkToBeSaved.setType_of_parking_system(carParkFromCSV.getType_of_parking_system());
+
+        return  carParkToBeSaved;
+    }
+
+    private CarPark  upddateLatLongInCarParkData(CarPark carParkToBeSaved, CarPark carParkFromCSV) {
+
+        if(latlongHasChanged(carParkToBeSaved, carParkFromCSV)) {
+
+            Double easting = new Double(carParkFromCSV.getX_coord());
+            Double northing = new Double(carParkFromCSV.getY_coord());
+
+            LatLonCoordinate latLonCoordinate = SVY21.computeLatLon(northing, easting);
+            carParkToBeSaved.setLatitude(latLonCoordinate.getLatitude());
+            carParkToBeSaved.setLongitude(latLonCoordinate.getLongitude());
+
+        }
+
+        return carParkToBeSaved;
+
+    }
     private boolean latlongHasChanged(CarPark carParkFromDB, CarPark carParkFromCSV) {
 
         if(carParkFromDB.getLatitude() == null || carParkFromDB.getLongitude() == null ||
@@ -137,21 +140,12 @@ public class CarParkInfoCSVService {
         return  false;
     }
 
-    public List<CarPark> getAllCar() {
-        return null;
-    }
+
 
     public static String TYPE = "text/csv";
     static String[] HEADERs = { "car_park_no","address","x_coord","y_coord","car_park_type","type_of_parking_system","short_term_parking","free_parking","night_parking","car_park_decks","gantry_height","car_park_basement"};
 
-    public static boolean hasCSVFormat(MultipartFile file) {
 
-        if (!TYPE.equals(file.getContentType())) {
-            return false;
-        }
-
-        return true;
-    }
 
     public static List<CarPark> csvToCarParkInfo(InputStream is) throws CarParkInfoCSVSyncingException {
 

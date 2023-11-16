@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CarParkRepo  {
+public class CarParkJDBCRepo {
 
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public CarParkRepo(JdbcTemplate jdbcTemplate) {
+    public CarParkJDBCRepo(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

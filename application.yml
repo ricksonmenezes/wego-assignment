@@ -27,3 +27,10 @@ spring:
        username: root
        password: biddiaSQL
        driverClassName: com.mysql.cj.jdbc.Driver
+
+#carpark.csv.url: csv/HDBCarparkInformation.csv
+#onemap.token.url: https://www.onemap.gov.sg/api/auth/post/getToken
+#onemap.user: ricksonmenezes@gmail.com
+#onemap.password: rIcks@n12345
+#onemap.converter.url: https://www.onemap.gov.sg/api/common/convert/3414to4326
+#onemap.carpark.availability.url: https://api.data.gov.sg/v1/transport/carpark-availability

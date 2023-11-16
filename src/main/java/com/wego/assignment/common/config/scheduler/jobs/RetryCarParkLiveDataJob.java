@@ -29,11 +29,11 @@ public class RetryCarParkLiveDataJob implements Job {
         try {
 
             //fixme: change these to loggers
-            logger.debug("job " + context.getJobDetail().getDescription() + " came in at " + new Date());
+            logger.debug("job {} came in at {} ", context.getJobDetail().getDescription(), new Date());
 
             carParkService.syncCarParkAvailability();
 
-            logger.debug("job " + context.getJobDetail().getDescription() + " finished at " + new Date());
+            logger.debug("job {}  finished at {} ", context.getJobDetail().getDescription(), new Date());
 
         } catch (Exception e) {
 

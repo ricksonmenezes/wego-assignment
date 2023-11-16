@@ -1,5 +1,8 @@
 
  INSTRUCTIONS TO RUN PROJECT
+ 
+ mysql runs on port 3307 and spring server runs on port 8080. These two ports have to be free to be assigned by docer 
+ 
 1. clone the repo using below url. You will need git installed on your machine and cmd/bash access  (cmd for windows)
 
     git clone https://github.com/ricksonmenezes/wego-assignment.git
@@ -78,7 +81,9 @@ Optimizations foreseen but could not implement
 4. Adding token to interceptor so that token call is abstracted and only done when token is expired there by reducing network calls.
 
 5. Presently all car park data every 30 mins is indiscriminately updated. Using Javers library, we can check if there are changes between
-   the csv car park data and DB data and only then update it. This would save us 2000 updates each time as changes to static data is rare.  
+   the csv car park data and DB data and only then update it. This would save us 2000 updates each time as changes to static data is rare.
+   
+6. Could not get time to move all the hard-coded API urls and one map credentials to a separate file like yaml etc.      
 
 
 Scalability   

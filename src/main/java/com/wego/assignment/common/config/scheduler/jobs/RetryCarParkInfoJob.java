@@ -26,11 +26,11 @@ public class RetryCarParkInfoJob implements Job {
 
         try {
 
-            logger.debug("job " + context.getJobDetail().getDescription() + " came in at " + new Date());
+            logger.debug("job {} came in at {} ", context.getJobDetail().getDescription(), new Date());
 
             carParkInfoCSVService.syncCarParkInfoFile();
 
-            logger.debug("job " + context.getJobDetail().getDescription() + " finished at " + new Date());
+            logger.debug("job {}  finished at {} ", context.getJobDetail().getDescription(), new Date());
 
         }
         catch(Exception e)

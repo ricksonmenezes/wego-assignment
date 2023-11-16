@@ -24,12 +24,13 @@ public class CarParkRestTemplateErrorHandler implements ResponseErrorHandler {
         if (httpResponse.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
             throw new CarParkAPIException("Internal Server Error");
         }
-        else if (httpResponse.getStatusCode().value() == 503)
+
+        else if (httpResponse.getStatusCode().value() == HttpStatus.SERVICE_UNAVAILABLE.value())
         {
             throw new CarParkAPIException("To Many Concurrent Request");
 
         }
-        else if (httpResponse.getStatusCode().value() == 429)
+        else if (httpResponse.getStatusCode().value() == HttpStatus.TOO_MANY_REQUESTS.value())
         {
             throw new CarParkAPIException("To Many Daily Request");
 

@@ -8,7 +8,7 @@ import com.wego.assignment.controller.carparks.model.CarPark;
 import com.wego.assignment.controller.carparks.model.CarParkAvailability;
 import com.wego.assignment.controller.carparks.model.CarParkAvailabilityID;
 import com.wego.assignment.controller.carparks.repo.CarParkAvailabilityRepo;
-import com.wego.assignment.controller.carparks.repo.CarParkRepo;
+import com.wego.assignment.controller.carparks.repo.CarParkJDBCRepo;
 import com.wego.assignment.controller.carparks.repo.CarParkRepository;
 import com.wego.assignment.controller.carparks.view.*;
 import com.wego.assignment.controller.carparks.view.carparkavailability.CarParkData;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -42,7 +41,7 @@ public class CarParkService  {
     CarParkCacheService carParkCacheService;
 
     @Autowired
-    CarParkRepo jdbcRepo;
+    CarParkJDBCRepo jdbcRepo;
 
 
     public LatLong convertSVY21ToLatLong(Double x, Double y) throws CarParkException {
