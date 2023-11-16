@@ -1,7 +1,8 @@
 
  INSTRUCTIONS TO RUN PROJECT
  
- mysql runs on port 3307 and spring server runs on port 8080. These two ports have to be free to be assigned by docer 
+ mysql runs on port 3307 and spring server runs on port 8080. These two ports have to be free to be assigned by docker
+ We are using the main branch. Please ignore the master branch if you can see it.  
  
 1. clone the repo using below url. You will need git installed on your machine and cmd/bash access  (cmd for windows)
 
